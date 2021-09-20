@@ -1,0 +1,64 @@
+application_api_version: v1beta1
+properties:
+  APP_INSTANCE_NAME:
+    type: string
+    x-google-marketplace:
+      type: NAME
+  NAMESPACE:
+    type: string
+    x-google-marketplace:
+      type: NAMESPACE
+  IMAGE_TSBCP:
+    type: string
+    default: $REGISTRY:$TAG
+    x-google-marketplace:
+      type: IMAGE
+  TSB_PASSWORD:
+    type: string
+    x-google-marketplace:
+      type: MASKED_FIELD
+  CLUSTER_NAME:
+    type: string
+    default: "cluster-2"
+    x-google-marketplace:
+      type: STRING
+  MP_CLUSTER:
+    type: string
+    default: "management-plane"
+    x-google-marketplace:
+      type: STRING
+  ZONE:
+    type: string
+    default: "us-central1-c"
+    x-google-marketplace:
+      type: STRING
+  PROJECT:
+    type: string
+    default: "gke-istio-test-psb"
+    x-google-marketplace:
+      type: STRING
+  STORAGE_CLASS:
+    type: string
+    default: "standard"
+    x-google-marketplace:
+      type: STORAGE_CLASS
+  SERVICE_ACCOUNT:
+    title: Cluster Admin Service Account
+    description: >-
+      Name of a service account in the target namespace that
+      has cluster-admin permissions. This is needed for the operator
+      to create Tetrate Service Bridge and resources.
+    type: string
+    x-google-marketplace:
+      type: SERVICE_ACCOUNT
+      serviceAccount:
+        roles:
+        - type: ClusterRole
+          rulesType: PREDEFINED
+          rulesFromRoleName: cluster-admin
+required:
+- APP_INSTANCE_NAME
+- NAMESPACE
+- IMAGE_TSBCP
+- TSB_PASSWORD
+- SERVICE_ACCOUNT
