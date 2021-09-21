@@ -19,7 +19,7 @@ spec:
       serviceAccountName: postgres-operator
       containers:
       - name: postgres-operator
-        image: gcr.io/gke-istio-test-psb/tsb-operator/postgres-operator:v1.7.0
+        image: $pgoperator.image
         imagePullPolicy: IfNotPresent
         resources:
           requests:

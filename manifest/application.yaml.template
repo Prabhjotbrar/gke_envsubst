@@ -2,6 +2,7 @@ apiVersion: app.k8s.io/v1beta1
 kind: Application 
 metadata:
   name: "$APP_INSTANCE_NAME"
+  namespace: "$NAMESPACE"
   annotations:
     kubernetes-engine.cloud.google.com/icon: data:image/png;base64,{{ .Files.Get "logo.png" | b64enc | trim }}
     marketplace.cloud.google.com/deploy-info: '{"partner_id": "tetrate-public", "product_id": "tsb", "partner_name": "Tetrate"}'

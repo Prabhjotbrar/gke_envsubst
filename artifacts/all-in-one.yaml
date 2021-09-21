@@ -3027,7 +3027,7 @@ spec:
       securityContext:
         runAsNonRoot: true
       containers:
-      - image: "gcr.io/gke-istio-test-psb/tsb-operator/eck-operator:1.3.0"
+      - image: $eck.image
         imagePullPolicy: IfNotPresent
         name: manager
         args:

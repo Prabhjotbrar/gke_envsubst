@@ -31,7 +31,7 @@ CERT_TAG ?= v1.3.1
 
 # Deployer tag is used for displaying versions in partner portal.
 # This version only support major.minor 
-DEPLOYER_TAG ?= 1.4
+DEPLOYER_TAG ?= 1.3
 $(info ---- DEPLOYER_TAG = $(DEPLOYER_TAG))
 
 # Tag the deployer image with modified version.
@@ -91,15 +91,6 @@ app/build:: .build/tsb-operator/deployer \
 	docker pull docker.elastic.co/eck/eck-operator:$(ECK_OPERATOR_TAG)
 	docker tag docker.elastic.co/eck/eck-operator:$(ECK_OPERATOR_TAG) "$(REGISTRY)/eck-operator:$(ECK_OPERATOR_TAG)"
 	docker push "$(REGISTRY)/eck-operator:$(ECK_OPERATOR_TAG)"
-	@touch "$@"
-
-.build/tsb-operator/bitnami-kubectl: .build/var/REGISTRY \
-  				     .build/var/KUBECTL_TAG \
-                                     | .build/tsb-operator
-	$(call print_target, $@)
-	docker pull bitnami/kubectl:$(KUBECTL_TAG)
-	docker tag bitnami/kubectl:$(KUBECTL_TAG) "$(REGISTRY)/kubectl:$(KUBECTL_TAG)"
-	docker push "$(REGISTRY)/kubectl:$(KUBECTL_TAG)"
 	@touch "$@"
 
 .build/tsb-operator/tctl: .build/var/REGISTRY \

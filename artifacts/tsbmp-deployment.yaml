@@ -35,7 +35,7 @@ spec:
               fieldPath: metadata.namespace
         - name: OPERATOR_NAME
           value: tsb-operator
-        image: gcr.io/gke-istio-test-psb/tsb-operator:1.3.0
+        image: $tsb.image.repo:$tsb.image.tag
         imagePullPolicy: IfNotPresent
         name: tsb-operator
         resources:

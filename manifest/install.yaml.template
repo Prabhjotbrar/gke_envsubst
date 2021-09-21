@@ -97,7 +97,7 @@ spec:
           sed "s%#HUB#%${HUB}%g;s%#MP_HOST#%${MP_ADDRESS}%g;s%#CP_CLUSTER#%${CLUSTER_NAME}%g" artifacts/cp.yaml.tpl > artifacts/cp.yaml
           sleep 40
           kubectl apply -f artifacts/cp.yaml
-        image: $REGISTRY/deployer:$TAG
+        image: $TSB_IMAGE
         imagePullPolicy: Always
         name: tsb-installer
       dnsPolicy: ClusterFirst

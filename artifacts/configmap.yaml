@@ -32,7 +32,7 @@ data:
   # default_memory_request: 100Mi
   # delete_annotation_date_key: delete-date
   # delete_annotation_name_key: delete-clustername
-  docker_image: gcr.io/gke-istio-test-psb/tsb-operator/spilo-13:2.1-p1
+  docker_image: $spilo.image
   # downscaler_annotations: "deployment-time,downscaler/*"
   # enable_admin_role_for_users: "true"
   # enable_crd_validation: "true"

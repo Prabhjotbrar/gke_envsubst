@@ -1,4 +1,52 @@
-application_api_version: v1beta1
+x-google-marketplace:
+  schemaVersion: v2
+
+  applicationApiVersion: v1beta1
+  # The published version is required and MUST match the tag
+  # of the deployer image
+  publishedVersion: '1.3'
+  publishedVersionMetadata:
+    releaseNote: >-
+      A first release.
+  images:
+    '':
+      properties:
+        tsb.image.repo:
+          type: REPO_WITH_REGISTRY
+        tsb.image.tag:
+          type: TAG
+    eck:
+      properties:
+        eck.image:
+          type: FULL
+    tctl:
+      properties:
+        tctl.image:
+          type: FULL
+    pgoperator:
+      properties:
+        pgoperator.image:
+          type: FULL
+    spilo:
+      properties:
+        spilo.image:
+          type: FULL
+    es:
+      properties:
+        es.image:
+          type: FULL
+    cminjector:
+      properties:
+        cminjector.image:
+          type: FULL
+    cmcontroller:
+      properties:
+        cmcontroller.image:
+          type: FULL
+    cmwebhook:
+      properties:
+        cmwebhook.image:
+          type: FULL
 properties:
   APP_INSTANCE_NAME:
     type: string
@@ -8,11 +56,6 @@ properties:
     type: string
     x-google-marketplace:
       type: NAMESPACE
-  IMAGE_TSBCP:
-    type: string
-    default: $REGISTRY:$TAG
-    x-google-marketplace:
-      type: IMAGE
   TSB_PASSWORD:
     type: string
     x-google-marketplace:
@@ -59,6 +102,5 @@ properties:
 required:
 - APP_INSTANCE_NAME
 - NAMESPACE
-- IMAGE_TSBCP
 - TSB_PASSWORD
 - SERVICE_ACCOUNT
