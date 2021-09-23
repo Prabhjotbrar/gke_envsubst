@@ -17,8 +17,10 @@ x-google-marketplace:
           type: TAG
     eck-operator:
       properties:
-        eckImage:
-          type: FULL
+        eckImageRepo:
+          type: REPO_WITH_REGISTRY
+        eckImageTag:
+          type: TAG
     tctl:
       properties:
         tctlImageRepo:
@@ -27,28 +29,40 @@ x-google-marketplace:
           type: TAG
     postgres-operator:
       properties:
-        pgoperatorImage:
-          type: FULL
+        pgoperatorImageRepo:
+          type: REPO_WITH_REGISTRY
+        pgoperatorImageTag:
+          type: TAG
     spilo-13:
       properties:
-        spiloImage:
-          type: FULL
+        spiloImageRepo:
+          type: REPO_WITH_REGISTRY
+        spiloImageTag:
+          type: TAG
     elasticsearch:
       properties:
-        esImage:
-          type: FULL
+        esImageRepo:
+          type: REPO_WITH_REGISTRY
+        esImageTag:
+          type: TAG
     cert-manager-cainjector:
       properties:
-        cminjectorImage:
-          type: FULL
+        cminjectorImageRepo:
+          type: REPO_WITH_REGISTRY
+        cminjectorImageTag:
+          type: TAG
     cert-manager-controller:
       properties:
-        cmcontrollerImage:
-          type: FULL
+        cmcontrollerImageRepo:
+          type: REPO_WITH_REGISTRY
+        cmcontrollerImageTag:
+          type: TAG
     cert-manager-webhook:
       properties:
-        cmwebhookImage:
-          type: FULL
+        cmwebhookImageRepo:
+          type: REPO_WITH_REGISTRY
+        cmwebhookImageTag:
+          type: TAG
 properties:
   name:
     type: string

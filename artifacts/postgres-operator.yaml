@@ -19,7 +19,7 @@ spec:
       serviceAccountName: postgres-operator
       containers:
       - name: postgres-operator
-        image: $pgoperatorImage
+        image: $pgoperatorImageRepo/postgres-operator:$pgoperatorImageTag
         imagePullPolicy: IfNotPresent
         resources:
           requests:
