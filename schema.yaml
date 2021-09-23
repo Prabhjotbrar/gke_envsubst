@@ -4,103 +4,102 @@ x-google-marketplace:
   applicationApiVersion: v1beta1
   # The published version is required and MUST match the tag
   # of the deployer image
-  publishedVersion: '1.3'
+  publishedVersion: '1.3.0'
   publishedVersionMetadata:
     releaseNote: >-
       A first release.
   images:
     '':
       properties:
-        tsb.image.repo:
+        tsbImageRepo:
           type: REPO_WITH_REGISTRY
-        tsb.image.tag:
+        tsbImageTag:
           type: TAG
-    eck:
+    eck-operator:
       properties:
-        eck.image:
+        eckImage:
           type: FULL
     tctl:
       properties:
-        tctl.image:
-          type: FULL
-    pgoperator:
+        tctlImageRepo:
+          type: REPO_WITH_REGISTRY
+        tctlImageTag:
+          type: TAG
+    postgres-operator:
       properties:
-        pgoperator.image:
+        pgoperatorImage:
           type: FULL
-    spilo:
+    spilo-13:
       properties:
-        spilo.image:
+        spiloImage:
           type: FULL
-    es:
+    elasticsearch:
       properties:
-        es.image:
+        esImage:
           type: FULL
-    cminjector:
+    cert-manager-cainjector:
       properties:
-        cminjector.image:
+        cminjectorImage:
           type: FULL
-    cmcontroller:
+    cert-manager-controller:
       properties:
-        cmcontroller.image:
+        cmcontrollerImage:
           type: FULL
-    cmwebhook:
+    cert-manager-webhook:
       properties:
-        cmwebhook.image:
+        cmwebhookImage:
           type: FULL
 properties:
-  APP_INSTANCE_NAME:
+  name:
     type: string
+    default: "tsb"
     x-google-marketplace:
       type: NAME
-  NAMESPACE:
+  namespace:
     type: string
     x-google-marketplace:
       type: NAMESPACE
-  TSB_PASSWORD:
+  reportingSecret:
+    type: string
+    x-google-marketplace:
+      type: REPORTING_SECRET
+  tsb_password:
     type: string
     x-google-marketplace:
       type: MASKED_FIELD
-  CLUSTER_NAME:
+  cluster_name:
     type: string
     default: "cluster-2"
     x-google-marketplace:
       type: STRING
-  MP_CLUSTER:
+  mp_cluster:
     type: string
     default: "management-plane"
     x-google-marketplace:
       type: STRING
-  ZONE:
+  zone:
     type: string
     default: "us-central1-c"
     x-google-marketplace:
       type: STRING
-  PROJECT:
+  project:
     type: string
     default: "gke-istio-test-psb"
     x-google-marketplace:
       type: STRING
-  STORAGE_CLASS:
-    type: string
-    default: "standard"
-    x-google-marketplace:
-      type: STORAGE_CLASS
-  SERVICE_ACCOUNT:
+  service_account:
     title: Cluster Admin Service Account
-    description: >-
-      Name of a service account in the target namespace that
-      has cluster-admin permissions. This is needed for the operator
-      to create Tetrate Service Bridge and resources.
     type: string
     x-google-marketplace:
       type: SERVICE_ACCOUNT
       serviceAccount:
+        description: "Name of a service account in the target namespace that has cluster-admin permissions. This is needed for the operator to create Tetrate Service Bridge and resources."
         roles:
         - type: ClusterRole
           rulesType: PREDEFINED
           rulesFromRoleName: cluster-admin
 required:
-- APP_INSTANCE_NAME
-- NAMESPACE
-- TSB_PASSWORD
-- SERVICE_ACCOUNT
+- name
+- namespace
+- tsb_password
+- service_account

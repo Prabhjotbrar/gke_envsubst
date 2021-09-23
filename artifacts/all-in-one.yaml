@@ -3027,7 +3027,7 @@ spec:
       securityContext:
         runAsNonRoot: true
       containers:
-      - image: $eck.image
+      - image: $eckImage
         imagePullPolicy: IfNotPresent
         name: manager
         args:
