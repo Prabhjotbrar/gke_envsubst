@@ -41,7 +41,7 @@ spec:
             securityContext:
               privileged: true
     - name: data
-      count: 3
+      count: 2
       config:
         node.master: false
         node.data: true

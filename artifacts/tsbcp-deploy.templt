@@ -35,7 +35,7 @@ spec:
               fieldPath: metadata.namespace
         - name: OPERATOR_NAME
           value: tsb-operator
-        image: $tsbImageRepo:$tsbImageTag
+        image: $REPO/tsboperator-server:$TAG
         imagePullPolicy: IfNotPresent
         name: tsb-operator
         resources:

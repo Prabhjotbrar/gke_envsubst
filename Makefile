@@ -10,6 +10,7 @@ include ../var.Makefile
 
 # Container repo
 REGISTRY := gcr.io/gke-istio-test-psb/tsb-operator
+#REGISTRY := gcr.io/tetrate-public/tsb-operator
 
 $(info ---- REGISTRY = $(REGISTRY))
 
@@ -21,11 +22,13 @@ $(info ---- OPERATOR_TAG = $(OPERATOR_TAG))
 
 POSTGRES_VERSION ?= 11.13.0
 ELASTIC_VERSION ?= 7.14.0
-ECK_OPERATOR_TAG ?= 1.7.1
+ECK_OPERATOR_TAG ?= 1.8.0
 KUBECTL_TAG ?= 1.20.10
 TCTL_TAG ?= v10
 PGO_TAG ?= v1.6.3
 PGS_TAG ?= 2.0-p7
+PGB_TAG ?= master-18
+PGLB_TAG ?= v1.7.0
 ES_TAG ?= 7.5.2
 CERT_TAG ?= v1.3.1
 
@@ -49,10 +52,13 @@ TESTER_IMAGE ?= $(REGISTRY)/tester:$(OPERATOR_TAG)
 
 app/build:: .build/tsb-operator/deployer \
             .build/tsb-operator/primary \
+			.build/tsb-operator/tsboperator-server \
             .build/tsb-operator/eck-operator \
             .build/tsb-operator/tctl \
             .build/tsb-operator/tester \
             .build/tsb-operator/postgres-operator \
+			.build/tsb-operator/pgbouncer \
+			.build/tsb-operator/logical-backup \
             .build/tsb-operator/spilo \
             .build/tsb-operator/elasticsearch \
             .build/tsb-operator/cert-manager-cainjector \
@@ -119,6 +125,15 @@ app/build:: .build/tsb-operator/deployer \
 	docker push "$(REGISTRY):$(OPERATOR_TAG)"
 	@touch "$@"
 
+.build/tsb-operator/tsboperator-server: .build/var/REGISTRY \
+ 			    .build/var/OPERATOR_TAG \
+                             | .build/tsb-operator
+	$(call print_target, $@)
+	docker pull gcr.io/gke-istio-test-psb/tsboperator-server:$(OPERATOR_TAG)
+	docker tag gcr.io/gke-istio-test-psb/tsboperator-server:$(OPERATOR_TAG) "$(REGISTRY)/tsboperator-server:$(OPERATOR_TAG)"
+	docker push "$(REGISTRY)/tsboperator-server:$(OPERATOR_TAG)"
+	@touch "$@"
+
 .build/tsb-operator/tester: apptest/**/* \
                                 | .build/tsb-operator
 	$(call print_target, $@)
@@ -145,6 +160,26 @@ app/build:: .build/tsb-operator/deployer \
 	docker pull registry.opensource.zalan.do/acid/spilo-13:$(PGS_TAG)
 	docker tag registry.opensource.zalan.do/acid/spilo-13:$(PGS_TAG) "$(REGISTRY)/spilo-13:$(OPERATOR_TAG)"
 	docker push "$(REGISTRY)/spilo-13:$(OPERATOR_TAG)"
+	@touch "$@"
+
+.build/tsb-operator/pgbouncer: .build/var/REGISTRY \
+  				     .build/var/PGB_TAG \
+					.build/var/OPERATOR_TAG \
+                                     | .build/tsb-operator
+	$(call print_target, $@)
+	docker pull registry.opensource.zalan.do/acid/pgbouncer:$(PGB_TAG)
+	docker tag registry.opensource.zalan.do/acid/pgbouncer:$(PGB_TAG) "$(REGISTRY)/pgbouncer:$(OPERATOR_TAG)"
+	docker push "$(REGISTRY)/pgbouncer:$(OPERATOR_TAG)"
+	@touch "$@"
+	
+.build/tsb-operator/logical-backup: .build/var/REGISTRY \
+  				     .build/var/PGLB_TAG \
+					.build/var/OPERATOR_TAG \
+                                     | .build/tsb-operator
+	$(call print_target, $@)
+	docker pull registry.opensource.zalan.do/acid/logical-backup:$(PGLB_TAG)
+	docker tag registry.opensource.zalan.do/acid/logical-backup:$(PGLB_TAG) "$(REGISTRY)/logical-backup:$(OPERATOR_TAG)"
+	docker push "$(REGISTRY)/logical-backup:$(OPERATOR_TAG)"
 	@touch "$@"
 
 .build/tsb-operator/elasticsearch: .build/var/REGISTRY \
