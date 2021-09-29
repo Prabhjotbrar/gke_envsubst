@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: tsb-postgres-installer-job
+  labels:
+    app.kubernetes.io/name: $name
+    app.kubernetes.io/component: tsb-postgres-installer-job
+spec:
+  ttlSecondsAfterFinished: 1800
+  backoffLimit: 0
+  completions: 1
+  parallelism: 1
+  template:
+    spec:
+      serviceAccountName: $service_account
+      containers:
+      - command:
+        - "/bin/bash"
+        - "-ec"
+        - |
+          set -euxo pipefail
+          export REPO=$tsbImageRepo
+          export TAG=$tsbImageTag
+          export NAMESPACE=$namespace
+          echo ">>>1 Expand artifact templates with $REPO $TAG"
+          envsubst '$REPO $TAG' < /data/artifacts/configmap.templt > /data/artifacts/configmap.yaml
+          envsubst '$REPO $TAG' < /data/artifacts/postgres-operator.templt > /data/artifacts/postgres-operator.yaml
+          envsubst '$NAMESPACE' < /data/artifacts/operator-service-account-rbac.templt > /data/artifacts/operator-service-account-rbac.yaml
+          echo ">>>2 Installing Postgres Operator"
+          kubectl apply -f /data/artifacts/configmap.yaml
+          kubectl apply -f /data/artifacts/operator-service-account-rbac.yaml
+          kubectl apply -f /data/artifacts/postgres-operator.yaml
+          kubectl apply -f /data/artifacts/api-service.yaml
+          sleep 20
+          sed  "s%#SC#%standard%g" /data/artifacts/pgsql.yaml.tpl > /data/artifacts/pgsql.yaml 
+          kubectl apply -f /data/artifacts/pgsql.yaml
+          sleep 15
+          export PG_PASS=$(kubectl get secret -n default tsb-user.acid-minimal-cluster.credentials -o go-template='{{ .data.password | base64decode }}')
+          echo "PG_PASS=" $PG_PASS
+        image: $tsbImageRepo/deployer:$tsbImageTag
+        imagePullPolicy: Always
+        name: tsb-postgres-installer
+      dnsPolicy: ClusterFirst
+      restartPolicy: Never
+      
+

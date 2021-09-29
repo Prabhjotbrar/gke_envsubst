@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: tsb-installer-job
+  name: tsb-mp-cp-installer-job
   labels:
     app.kubernetes.io/name: $name
-    app.kubernetes.io/component: tsb-installer-job
+    app.kubernetes.io/component: tsb-mp-cp-installer-job
 spec:
-  ttlSecondsAfterFinished: 300
+  ttlSecondsAfterFinished: 1800
   backoffLimit: 0
   completions: 1
   parallelism: 1
@@ -18,46 +18,26 @@ spec:
         - "/bin/bash"
         - "-ec"
         - |
+          set -euxo pipefail
           export REPO=$tsbImageRepo
           export TAG=$tsbImageTag
           export NAMESPACE=$namespace
-          echo "Expand artifact templates with $REPO $TAG"
-          envsubst '$REPO $TAG' < /data/artifacts/operator.templt > /data/artifacts/operator.yaml
-          envsubst '$REPO $TAG' < /data/artifacts/cert-manager.templt > /data/artifacts/cert-manager.yaml
-          envsubst '$REPO $TAG' < /data/artifacts/configmap.templt > /data/artifacts/configmap.yaml
-          envsubst '$REPO $TAG' < /data/artifacts/postgres-operator.templt > /data/artifacts/postgres-operator.yaml
-          envsubst '$NAMESPACE' < /data/artifacts/operator-service-account-rbac.templt > /data/artifacts/operator-service-account-rbac.yaml
+          echo ">>>1 Expand artifact templates with $REPO $TAG"
           envsubst '$REPO $TAG' < /data/artifacts/tsbcp-deploy.templt > /data/artifacts/tsbcp-deploy.yaml
           envsubst '$REPO $TAG' < /data/artifacts/tsbmp-deployment.templt > /data/artifacts/tsbmp-deployment.yaml
-          kubectl apply -f /data/artifacts/cert-manager.yaml
-          kubectl wait pods --for condition=ready -n cert-manager --all --timeout=120s
-          sleep 20
-          kubectl apply -f /data/artifacts/configmap.yaml
-          kubectl apply -f /data/artifacts/operator-service-account-rbac.yaml
-          kubectl apply -f /data/artifacts/postgres-operator.yaml
-          kubectl apply -f /data/artifacts/api-service.yaml
-          sleep 20
-          sed  "s%#SC#%standard%g" /data/artifacts/pgsql.yaml.tpl > /data/artifacts/pgsql.yaml 
-          kubectl apply -f /data/artifacts/pgsql.yaml
-          sleep 15
-          export PG_PASS=$(kubectl get secret -n default tsb-user.acid-minimal-cluster.credentials -o go-template='{{ .data.password | base64decode }}')
-          echo "PG_PASS=" $PG_PASS
-          kubectl apply -f /data/artifacts/crds.yaml
-          sleep 15
-          kubectl apply -f /data/artifacts/operator.yaml
-          sleep 30
-          kubectl -n elastic-system wait --for condition=ready --timeout=120s pod/elastic-operator-0
-          sleep 15
-          kubectl apply -f /data/artifacts/elastic.yaml
-          sleep 30
-          printf "Waiting for elastic-pods  to become ready "
-          while ! kubectl wait pod -n elastic  --for condition=ready --timeout=60s --all; do
-            echo "waiting for elasticsearch!"
-            sleep 5
+          while ! kubectl wait pod -n cert-manager  --for condition=ready --timeout=60s --all; do
+            echo "waiting for cert-manager!"
+            sleep 2
           done
-          export ELASTIC_PASS=$(kubectl get secret -n elastic tsb-es-elastic-user -o go-template='{{ .data.elastic | base64decode }}')
-          kubectl get secret -n elastic tsb-es-http-certs-public -o go-template='{{ index .data "ca.crt" | base64decode}}' > /data/artifacts/es-ca-cert.pem
-
+          while ! kubectl -n elastic-system wait --for condition=ready --timeout=120s pod/elastic-operator-0; do
+            echo "waiting for elasticsearch operator!"
+            sleep 2
+          done
+          while ! kubectl wait pod -n elastic  --for condition=ready --timeout=60s --all; do
+            echo "waiting for elasticsearch pods!"
+            sleep 2
+          done
+          echo ">>>2 Install TSB"
           #install mp operator
           tctl install manifest management-plane-operator --registry $REPO | kubectl apply -f -
           sleep 5
@@ -109,7 +89,7 @@ spec:
           kubectl apply -f artifacts/cp.yaml
         image: $tsbImageRepo/deployer:$tsbImageTag
         imagePullPolicy: Always
-        name: tsb-installer
+        name: tsb-mp-cp-installer
       dnsPolicy: ClusterFirst
       restartPolicy: Never
       
