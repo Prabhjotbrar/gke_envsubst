@@ -27,4 +27,4 @@ spec:
       app.kubernetes.io/name: "$name"
   componentKinds:
   - group: v1
-    kind: Job
+    kind: Pod
