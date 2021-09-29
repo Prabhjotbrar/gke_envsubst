@@ -78,7 +78,7 @@ spec:
 
         MP_ADDRESS=$(kubectl get svc -n tsb envoy -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
         export ELASTIC_PASS=$(kubectl get secret -n elastic tsb-es-elastic-user -o go-template='{{ .data.elastic | base64decode }}')
-        tctl config clusters set $mp_cluster --bridge-address ${MP_ADDRESS}:8443 --tls-insecure
+        tctl config clusters set $mp_cluster --bridge-address ${MP_ADDRESS}:8443 
 
         tctl config profiles set $mp_cluster --cluster $mp_cluster
 
