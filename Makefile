@@ -9,8 +9,8 @@ include ../gcloud.Makefile
 include ../var.Makefile
 
 # Container repo
-REGISTRY := gcr.io/gke-istio-test-psb/tsb-operator
-#REGISTRY := gcr.io/tetrate-public/tsb-operator
+#REGISTRY := gcr.io/gke-istio-test-psb/tsb-operator
+REGISTRY := gcr.io/tetrate-public/tsb-operator
 
 $(info ---- REGISTRY = $(REGISTRY))
 
@@ -34,7 +34,7 @@ CERT_TAG ?= v1.3.1
 
 # Deployer tag is used for displaying versions in partner portal.
 # This version only support major.minor 
-DEPLOYER_TAG ?= 1.3.0
+DEPLOYER_TAG ?= 1.3
 $(info ---- DEPLOYER_TAG = $(DEPLOYER_TAG))
 
 # Tag the deployer image with modified version.
