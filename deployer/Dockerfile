@@ -8,8 +8,7 @@ COPY artifacts /data/artifacts
 COPY schema.yaml /data/
 COPY apptest/deployer /data-test/
 
-RUN curl -Lo /usr/local/bin/tctl https://binaries.dl.tetrate.io/public/raw/versions/linux-amd64-1.3.0/tctl && chmod +x /usr/local/bin/tctl
-RUN curl -Lo /usr/local/bin/kubectl https://dl.k8s.io/release/v1.20.10/bin/linux/amd64/kubectl && chmod +x /usr/local/bin/kubectl
+RUN curl -Lo /usr/local/bin/tctl https://binaries.dl.tetrate.io/public/raw/versions/linux-amd64-1.3.0/tctl && chmod +x /usr/local/bin/tctl 
 
 # Provide registry prefix and tag for default values for images.
 ARG REGISTRY
