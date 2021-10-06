@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "${name}-tester"
+  name: "${NAME}-tester"
   labels:
-    app.kubernetes.io/name: "${name}"
+    app.kubernetes.io/name: "${NAME}"
   annotations:
     marketplace.cloud.google.com/verification: test
 spec:
@@ -12,14 +12,6 @@ spec:
   - name: tester
     image: "${testerImage}"
     env:
-    - name: NAMESPACE
-      valueFrom:
-        configMapKeyRef:
-          name: ${name}-deployer-config
-          key: NAMESPACE
-    - name: SERVICEACCOUNT
-      valueFrom:
-        configMapKeyRef:
-          name: ${name}-deployer-config
-          key: service_account
+    - name: REPO
+      value: $tctlRepo
   restartPolicy: Never

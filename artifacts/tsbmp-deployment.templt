@@ -54,12 +54,13 @@ spec:
         - command: [ "/bin/bash", "-c", "--" ]
         args:
         - |
+            export startTime=`date --utc +%FT%TZ`
             while (( 1 )); do
               echo " Sending usage..."
-              export startTime=`date -d '1 hour ago' --utc +%FT%TZ`
+              sleep 3600
               export endTime=`date --utc +%FT%TZ`
               curl -H "Content-Type: application/json" -s http://localhost:6080/report -o /dev/null  "{ ‘name’ : 'num_management_planes', ‘startTime’ : '${startTime}', ‘endTime’ : '${endTime}', ‘value’ : { ‘int64Value’ : 1} }"
-              sleep 3600
+              export startTime=$endTime
       - name: ubbagent
         image: gcr.io/cloud-marketplace-tools/metering/ubbagent
         imagePullPolicy: IfNotPresent
