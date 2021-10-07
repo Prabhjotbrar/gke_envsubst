@@ -79,6 +79,7 @@ properties:
       type: REPORTING_SECRET
   tsb_password:
     type: string
+    default: "admin123"
     x-google-marketplace:
       type: MASKED_FIELD
   cluster_name:

@@ -1,5 +1,4 @@
-FROM marketplace.gcr.io/google/debian9
-
+FROM gcr.io/cloud-marketplace-tools/k8s/deployer_envsubst:latest
 RUN apt-get update && apt-get install -y --no-install-recommends \
     bash \
     ca-certificates \
@@ -7,6 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     jq \
     uuid-runtime \
     wget \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 RUN wget -q -O /bin/kubectl \

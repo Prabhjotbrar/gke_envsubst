@@ -2,9 +2,11 @@ ARG MARKETPLACE_TOOLS_TAG
 FROM gcr.io/cloud-marketplace-tools/k8s/deployer_envsubst:$MARKETPLACE_TOOLS_TAG
 
 RUN mkdir -p /data/artifacts
+RUN mkdir -p /data-test/artifacts
 
 COPY manifest /data/manifest
 COPY artifacts /data/artifacts
+COPY artifacts /data-test/artifacts
 COPY schema.yaml /data/
 COPY apptest/deployer /data-test/
 

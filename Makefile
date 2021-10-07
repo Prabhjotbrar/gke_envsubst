@@ -9,8 +9,8 @@ include ../gcloud.Makefile
 include ../var.Makefile
 
 # Container repo
-#REGISTRY := gcr.io/gke-istio-test-psb/tsb-operator
-REGISTRY := gcr.io/tetrate-public/tsb-operator
+REGISTRY := gcr.io/gke-istio-test-psb/tsb-operator
+#REGISTRY := gcr.io/tetrate-public/tsb-operator
 
 $(info ---- REGISTRY = $(REGISTRY))
 
