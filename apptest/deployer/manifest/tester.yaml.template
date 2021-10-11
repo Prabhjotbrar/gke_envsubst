@@ -8,6 +8,21 @@ metadata:
     marketplace.cloud.google.com/verification: test
 spec:
   serviceAccountName: ${service_account}
+  initContainers:
+  - name: wait-for-control-plane
+    image: "${testerImage}" 
+    command:
+    - "/bin/bash"
+    - "-ec"
+    - |
+      timeout 600 bash -c '
+      STATE=" "
+      until [ kubectl get controlplane -n istiosystem && kubectl get managementplane  -n tsb ];
+      do
+        echo "Waiting for ControlPlane to be available"; sleep 5;
+      done
+      sleep 60
+      '
   containers:
   - name: tester
     image: "${testerImage}"

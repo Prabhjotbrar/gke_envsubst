@@ -25,5 +25,5 @@ RUN cat /data-test/schema.yaml \
     > /data-test/schema.yaml.new \
     && mv /data-test/schema.yaml.new /data-test/schema.yaml
 
-ENV WAIT_FOR_READY_TIMEOUT 3600
-ENV TESTER_TIMEOUT 3600
+ENV WAIT_FOR_READY_TIMEOUT 7200
+ENV TESTER_TIMEOUT 7200

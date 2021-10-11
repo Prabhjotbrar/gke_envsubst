@@ -18,3 +18,7 @@ COPY tester.sh /tester/
 
 WORKDIR /tester
 ENTRYPOINT ["./tester.sh"]
+
+ENV WAIT_FOR_READY_TIMEOUT 7200
+ENV TESTER_TIMEOUT 7200
+

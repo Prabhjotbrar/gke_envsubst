@@ -103,16 +103,26 @@ properties:
     x-google-marketplace:
       type: STRING
   service_account:
-    title: Cluster Admin Service Account
     type: string
     x-google-marketplace:
       type: SERVICE_ACCOUNT
       serviceAccount:
-        description: "Name of a service account in the target namespace that has cluster-admin permissions. This is needed for the operator to create Tetrate Service Bridge and resources."
+        description: >
+          Name of a service account in the target namespace that has cluster-admin permissions. 
+          This is needed for the operator to create Tetrate Service Bridge and resources.
         roles:
-        - type: ClusterRole
-          rulesType: PREDEFINED
-          rulesFromRoleName: cluster-admin
+        - type: ClusterRole               
+          rulesType: CUSTOM        
+          rules:
+          - apiGroups: ['', 'apm.k8s.elastic.co', 'external.metrics.k8s.io', 'install.istio.io', 'apps', 'authorization.k8s.io', 'cert-manager.io', 'networking.istio.io', 'authentication.istio.io', 'acid.zalan.do', 'migration.k8s.io', 'gateway.xcp.tetrate.io', 'storage.k8s.io', 'route.openshift.io', 'enterprisesearch.k8s.elastic.co', 'apiregistration.k8s.io', 'rbac.authorization.k8s.io', 'auditregistration.k8s.io', 'kibana.k8s.elastic.co', 'agent.k8s.elastic.co', 'networking.k8s.io', 'maps.k8s.elastic.co', 'config.istio.io', 'autoscaling', 'batch', 'monitoring.coreos.com', 'xcp.tetrate.io', 'security.xcp.tetrate.io', 'rbac.istio.io', 'security.istio.io', 'beat.k8s.elastic.co', 'nodemanagement.gke.io', 'policy', 'admissionregistration.k8s.io', 'install.tetrate.io', 'traffic.xcp.tetrate.io', 'apiextensions.k8s.io', 'elasticsearch.k8s.elastic.co', 'extensions', 'snapshot.storage.k8s.io', 'acme.cert-manager.io', 'certificates.k8s.io', 'install.xcp.tetrate.io']
+            resources: ['kibanas/finalizers', 'clusterrolebindings', 'rolebindings', 'postgresqls/status', 'services', 'apmservers/finalizers', 'enterprisesearches/finalizers', 'beats', 'volumesnapshotcontents/status', 'horizontalpodautoscalers', 'pods/exec', 'workspacesettings', 'agents/finalizers', 'namespaces', 'elasticsearches/status', 'beats/status', 'volumeattachments/status', 'apmservers/status', 'enterprisesearches', 'challenges/status', 'issuers', 'nodes/proxy', 'agents/status', 'roles', 'configmaps', 'auditsinks', 'challenges/finalizers', 'kibanas', 'deployments', 'persistentvolumes', 'certificates', 'apmservers', 'elasticmapsservers/finalizers', 'nodes', 'clusters', 'volumeattachments', 'elasticmapsservers/status', 'podsecuritypolicies', 'pods/log', 'storageclasses', 'clusterroles', 'enterpriselicenses', 'volumesnapshots/status', 'issuers/status', 'elasticsearches', 'kibanas/status', 'enterprisesearches/status', 'mutatingwebhookconfigurations', 'persistentvolumeclaims/status', 'volumesnapshotclasses', 'certificates/status', 'statefulsets', 'storagestates', 'updateinfos', 'certificates/finalizers', 'postgresteams', 'certificaterequests/status', 'apiservices', 'servicemonitors', 'certificatesigningrequests', 'certificaterequests/finalizers', 'ingresses/finalizers', 'clusterissuers', 'orders', 'orders/status', 'globalsettings', 'serviceaccounts', 'ingresses', 'elasticmapsservers', 'endpoints', 'poddisruptionbudgets', 'challenges', 'volumesnapshots', 'volumesnapshotcontents', 'secrets', 'beats/finalizers', 'orders/finalizers', 'validatingwebhookconfigurations', 'customresourcedefinitions', 'customresourcedefinitions.apiextensions.k8s.io', 'signers', 'pods', 'agents', 'enterpriselicenses/status', 'cronjobs', 'daemonsets', 'certificatesigningrequests/status', 'replicasets', 'certificatesigningrequests/approval', 'subjectaccessreviews', 'clusterissuers/status', 'routes/custom-host', 'elasticsearches/finalizers', 'storageversionmigrations', 'workspaces', 'csinodes', 'events', 'persistentvolumeclaims', 'operatorconfigurations', 'certificaterequests', 'deployments/finalizers', 'postgresqls']
+            verbs: ['deletecollection', 'list', 'use', 'watch', 'update', 'patch', 'sign', 'get', 'delete', 'create', 'approve']
+        - type: Role
+          rulesType: CUSTOM
+          rules:
+          - apiGroups: ['', 'coordination.k8s.io', 'apps', 'extensions']
+            resources: ['configmaps', 'deployments/scale', 'leases', 'secrets']
+            verbs: ['list', 'watch', 'update', 'patch', 'get', 'delete', 'create']
 required:
 - name
 - namespace
