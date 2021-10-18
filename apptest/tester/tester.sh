@@ -15,6 +15,10 @@
 # limitations under the License.
 
 set -eo pipefail
+until [ kubectl get controlplane -n istiosystem && kubectl get managementplane  -n tsb ];
+do
+    echo "Waiting for ControlPlane to be available"; sleep 5;
+done
 echo "Uninstalling TSB..."
 kubectl delete ingressgateways.install.tetrate.io --all --all-namespaces --ignore-not-found
 kubectl -n istio-gateway scale deployment tsb-operator-data-plane --replicas=0

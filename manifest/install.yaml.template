@@ -15,17 +15,22 @@ spec:
         export TAG=$tsbImageTag
         export NAMESPACE=$namespace
         export REPORTING_SECRET=$reportingSecret
+
         echo ">>>1 Expand artifact templates with $REPO $TAG"
         envsubst '$REPO $TAG' < /data/artifacts/operator.templt > /data/artifacts/operator.yaml
-        envsubst '$REPO $TAG' < /data/artifacts/cert-manager.templt > /data/artifacts/cert-manager.yaml
+        envsubst '$REPO $TAG ' < /data/artifacts/cert-manager.templt > /data/artifacts/cert-manager.yaml
         envsubst '$REPO $TAG' < /data/artifacts/configmap.templt > /data/artifacts/configmap.yaml
         envsubst '$REPO $TAG' < /data/artifacts/postgres-operator.templt > /data/artifacts/postgres-operator.yaml
         envsubst '$NAMESPACE' < /data/artifacts/operator-service-account-rbac.templt > /data/artifacts/operator-service-account-rbac.yaml
         envsubst '$REPO $TAG' < /data/artifacts/tsbcp-deploy.templt > /data/artifacts/tsbcp-deploy.yaml
         envsubst '$REPO $TAG $REPORTING_SECRET' < /data/artifacts/tsbmp-deployment.templt > /data/artifacts/tsbmp-deployment.yaml
         echo ">>>2 Installing Cert Manager"
-        kubectl apply -f /data/artifacts/cert-manager.yaml
-        kubectl wait pods --for condition=ready -n cert-manager --all --timeout=120s
+        if kubectl wait pods --for condition=ready -n cert-manager --all --timeout=120s > /dev/null 2>&1; then
+          echo 'Cert manager is already installed and ready.'
+        else
+          kubectl apply -f /data/artifacts/cert-manager.yaml
+          kubectl wait pods --for condition=ready -n cert-manager --all --timeout=120s
+        fi
         sleep 20
         echo ">>>3 Installing Postgres Operator"
         kubectl apply -f /data/artifacts/configmap.yaml

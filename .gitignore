@@ -1,3 +1,4 @@
 .build/
 verify.log*
 install.log
+.vscode/
